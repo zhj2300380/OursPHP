@@ -43,7 +43,7 @@ class Controller
      * 设置为api访问模式
      * restfull
      */
-    private function isApi()
+    protected function isApi()
     {
         $this->_app_type='api';
     }

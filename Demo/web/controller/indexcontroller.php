@@ -19,10 +19,10 @@ class IndexController  extends Controller
 {
 	public function __construct($request, &$response) {
 		header("Content-type: text/html; charset=utf-8");
-		//$this->_app_type='api';
 		parent::__construct($request, $response);
 	}
 	public function index($request,$response) {
+	    /**
 	    $mem=Memcached::getInstance();
         $time=$mem->get("key");
 
@@ -42,15 +42,10 @@ class IndexController  extends Controller
 	    dump($time,$time1);
 		$dao=new Test();
 		$rows=$dao->findAll();
+         * */
 		$response->title="这是标题";
-		$response->rows=$rows;
+		//$response->rows=$rows;
 		$response->body="这是普通模式";
 		$this->renderSmarty();	
-	}
-	public function GET_index($request,$response) {
-	
-		$response->title="这是标题";
-		$response->body="這個是API模式";
-		$this->renderSmarty('index');
 	}
 }
