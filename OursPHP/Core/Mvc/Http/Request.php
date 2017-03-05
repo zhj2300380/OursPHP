@@ -15,15 +15,31 @@ use OursPHP\Core\Common\BizException;
  */
 class Request {
 
+    private $_openfilter=true;
     private static $_instance;
     private $allowModify = false;
-    private static $getfilter="'|\\b(and|or)\\b.+?(>|<|=|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\/|<\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
-    private static $postfilter="\\b(and|or)\\b.{1,6}?(=|>|<|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\/|<\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
-    private static $cookiefilter="\\b(and|or)\\b.{1,6}?(=|>|<|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\/|<\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
+    private static $getfilter="'|\\b(and|or)\\b.+?(>|<|=|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
+    private static $postfilter="\\b(and|or)\\b.{1,6}?(=|>|<|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
+    private static $cookiefilter="\\b(and|or)\\b.{1,6}?(=|>|<|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
     const REPLACEMENT = '';
 
-    private function __construct() {}
+    private function __construct()
+    {
+        $this->_openfilter=OURS_REQUEST_FILTER_IMPUT;
+    }
 
+    /**
+     * 设置是否开启输入过滤
+     * 默认根据全局变量来配置
+     * $request->setOpenFilter()->content;
+     * @param bool $open 是否开启
+     * @return $this
+     */
+    public function setOpenFilter($open=true)
+    {
+        $this->_openfilter=$open;
+        return $this;
+    }
     /**
      * 单例
      * @return Request
@@ -42,7 +58,8 @@ class Request {
      */
     public function get($index, $default='') {
         if (isset($_GET[$index])) {
-            return preg_replace("/".self::$getfilter."/is", self::REPLACEMENT, $_GET[$index]);
+            $data=$this->filter_input($_GET[$index]);
+            return preg_replace("/".self::$getfilter."/is", self::REPLACEMENT, $data);
         } else {
             return $default;
         }
@@ -56,7 +73,8 @@ class Request {
      */
     public function post($index, $default='') {
         if (isset($_POST[$index])) {
-            return preg_replace("/".self::$postfilter."/is", self::REPLACEMENT, $_POST[$index]);
+            $data=$this->filter_input($_POST[$index]);
+            return preg_replace("/".self::$postfilter."/is", self::REPLACEMENT, $data);
         } else {
             return $default;
         }
@@ -70,8 +88,9 @@ class Request {
      */
     public function getRequest($index, $default='') {
         if (isset($_REQUEST[$index])) {
-            $tmp = preg_replace("/".self::$getfilter."/is", self::REPLACEMENT, $_REQUEST[$index]);
-            return preg_replace("/".self::$postfilter."/is", self::REPLACEMENT, $tmp);
+            $data=$this->filter_input($_REQUEST[$index]);
+            $data = preg_replace("/".self::$getfilter."/is", self::REPLACEMENT, $data);
+            return preg_replace("/".self::$postfilter."/is", self::REPLACEMENT, $data);
         } else {
             return $default;
         }
@@ -120,5 +139,20 @@ class Request {
         else
             throw new BizException('set value to const!');
 
+    }
+
+    /**
+     * 表单过滤
+     * @param $data
+     * @return string
+     */
+    function filter_input($data='') {
+        if($this->_openfilter)
+        {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+        }
+        return $data;
     }
 }
