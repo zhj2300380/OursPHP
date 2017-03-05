@@ -19,21 +19,23 @@ class CaptchaManage
     private $_font;//指定的字体
     private $_fontsize = 20;//指定字体大小
     private $_fontcolor;//指定字体颜色
+    private $_expire=300;//有效期
 
 
     private static $_captchamanage;
 
     /**
      * 单列
+     * @param int $expire 有效期（秒）
      * @param int $codelen 验证码长度
      * @param int $width 宽度
      * @param int $height 高度
      * @param int $fontsize 指定字体大小
      * @return CaptchaManage
      */
-    public static function  getInstance($codelen=6,$width=130,$height=50,$fontsize=20) {
+    public static function  getInstance($expire=300,$codelen=6,$width=130,$height=50,$fontsize=20) {
         if (empty(self::$_captchamanage)) {
-            self::$_captchamanage = new self($codelen,$width,$height,$fontsize);
+            self::$_captchamanage = new self($expire,$codelen,$width,$height,$fontsize);
         }
         return self::$_captchamanage;
     }
@@ -45,7 +47,11 @@ class CaptchaManage
      * @param int $height 高度
      * @param int $fontsize 指定字体大小
      */
-    public function __construct($codelen=6,$width=130,$height=50,$fontsize=20) {
+    public function __construct($expire=300,$codelen=6,$width=130,$height=50,$fontsize=20) {
+
+        if(is_int($expire) && $expire>0){
+            $this->_expire = $expire;
+        }
         if(is_int($codelen) && $codelen>0){
             $this->_codelen = $codelen;
         }
@@ -68,7 +74,7 @@ class CaptchaManage
         for ($i=0;$i<$this->_codelen;$i++) {
             $this->_code .= $this->_charset[mt_rand(0,$_len)];
         }
-        CookieManage::getInstance('ck_')->set('cc',$this->getCode(),120);
+        CookieManage::getInstance('ck')->set('cc',$this->getCode(),$this->_expire);
     }
     //生成背景
     private function createBg() {
@@ -126,8 +132,7 @@ class CaptchaManage
     public function check($code='')
     {
         $rel=false;
-        $this->_code=CookieManage::getInstance('ck_')->get('cc');
-        dump($code,$this->_code);
+        $this->_code=CookieManage::getInstance('ck')->get('cc');
         if($code===$this->_code)
         {
             $rel=true;
