@@ -116,7 +116,7 @@ class CaptchaManage
     /**
      * 生成驗證碼
      */
-    public function doimg() {
+    public function doImg() {
         $this->createBg();
         $this->createCode();
         $this->createLine();
@@ -129,7 +129,7 @@ class CaptchaManage
      * @param $code
      * @return bool
      */
-    public function check($code='')
+    public function doCheck($code='')
     {
         $rel=false;
         $this->_code=CookieManage::getInstance('ck')->get('cc');

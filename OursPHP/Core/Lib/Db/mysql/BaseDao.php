@@ -9,6 +9,7 @@ use OursPHP\Core\Common\BizException;
 //abstract class BaseDao implements ConnectionInterface 
 abstract class BaseDao{
 
+    use \OursPHP\Core\Lib\AppendTrait\WithCache;
 	const SLAVE = true;
 	const MASTER = false;
 	protected $_pdo = null;

@@ -5,6 +5,7 @@
  * Date: 2017/3/4
  * Time: 0:51
  * Doc: 框架启动文件
+ * PSR-[0-4]规范
  */
 define('OURS_VERSION', '0.1.0');
 define('OURS_DEBUG', false);
@@ -86,21 +87,10 @@ OursPHP\Init\ConfigManage::init();
 use OursPHP\Core\Common\BizException;
 use OursPHP\Core\Mvc\Http\Request;
 use OursPHP\Core\Mvc\App;
-use OursPHP\Core\Mvc\View\SmartyView;
+
 
 function Start()
 {
-    /**
-    $smarty = SmartyView::getSmarty();
-    $smarty->left_delimiter = '{{';
-    $smarty->right_delimiter = '}}';
-    $smarty->template_dir = WEB_PATH . 'template'.OURS_DS;
-    $smarty->cache_dir = WEB_TMP_PATH . "cache";
-    $smarty->compile_dir = WEB_TMP_PATH . "templates_c";
-
-//$smarty->registerClass('tpl', '\app\common\util\SmartyTpl'); //注册smarty 自定义函数类
-    $smarty->error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED;
-     * */
     $request = Request::getInstance();
     $controller = $request->_c;
     $action = $request->_a;
