@@ -54,10 +54,17 @@ class IndexController  extends Controller
         }
 
         dao
-        $dao=new Test();
-        $rows=$dao->findAll();
 
-        * */
+
+        $dao=new Test();
+        $rows=$dao->findAll();//直连数据库
+        $rows=$dao->findAll_with_cache('cache_time=300','cache_key=xxxxx');//通过缓存取数据
+        $rows=$dao->findAll_with_cache('cache_time=300');//通过缓存取数据
+        $rows=$dao->findAll_with_cache();//通过缓存取数据
+        dump($rows);
+         **/
+
+
 
 
 
@@ -89,7 +96,7 @@ class IndexController  extends Controller
      */
 	public function CreateCode($request,$response)
     {
-        $cc=CaptchaManage::getInstance()->doimg();
+        $cc=CaptchaManage::getInstance()->doImg();
     }
 
     /**
@@ -99,7 +106,8 @@ class IndexController  extends Controller
      */
     public function CheckCode($request,$response)
     {
-        $rel= CaptchaManage::getInstance()->check('cg77de');
+        $code=$request->code;
+        $rel= CaptchaManage::getInstance()->doCheck($code);
         dump($rel);
     }
 }

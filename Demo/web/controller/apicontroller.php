@@ -20,13 +20,13 @@ class ApiController  extends Controller
     public function GET_index($request,$response) {
 
         $response->title="这是标题";
-        $response->body="這個是API模式 以GET方式 请求index控制器GET_index方法";
+        $response->body="這個是API模式 以GET方式 请求{$this->_controller}控制器{$this->_action}方法";
         $this->renderSmarty('index');
     }
     public function POST_index($request,$response) {
 
         $response->title="这是标题";
-        $response->body="這個是API模式 以POST方式 请求index控制器POST_index方法";
-        //$this->renderSmarty('index');
+        $response->body="這個是API模式 以POST方式 请求{$this->_controller}控制器{$this->_action}方法";
+        $this->renderSmarty('index');
     }
 }
