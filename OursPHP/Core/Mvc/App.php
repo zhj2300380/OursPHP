@@ -51,10 +51,10 @@ class App {
         }
 
         $obj = new $controller($request, $response);
-        if (!method_exists($obj, $this->_action))
-        {
-            throw new BizException("'$controller' has not method '{$this->_action}' ");
-        }
+//        if (!method_exists($obj, $this->_action))
+//        {
+//            throw new BizException("'$controller' has not method '{$this->_action}' ");
+//        }
 
         $obj->befor($this->_controller, $this->_action);
         $obj->doAction($this->_action,$request, $response);

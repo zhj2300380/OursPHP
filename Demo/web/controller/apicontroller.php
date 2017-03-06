@@ -10,7 +10,7 @@ namespace  web\controller;
 
 use OursPHP\Core\Mvc\Controller\Controller;
 
-class AController  extends Controller
+class ApiController  extends Controller
 {
     public function __construct($request, &$response) {
         header("Content-type: text/html; charset=utf-8");
@@ -27,6 +27,6 @@ class AController  extends Controller
 
         $response->title="这是标题";
         $response->body="這個是API模式 以POST方式 请求index控制器POST_index方法";
-        $this->renderSmarty('index');
+        //$this->renderSmarty('index');
     }
 }
