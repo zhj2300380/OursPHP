@@ -13,7 +13,7 @@ class ConfigManage
 {
     private static $_configList;
 
-    private static $_configType=['mysql','mongodb','memcached','redis'];
+    private static $_configType=['mysql','mongodb','memcached','redis','decorator'];
 
     /**
      * @param $type 'mysql','mongodb','memcached','redis'
@@ -21,17 +21,17 @@ class ConfigManage
      * @return mixed
      * @throws BizException
      */
-    public static function getConfig($type,$nodeName)
+    public static function getConfig($type,$nodeName=null)
     {
         if (!in_array($type,self::$_configType))
         {
             throw new BizException("未知的配置类型");
         }
-        if(!key_exists($nodeName, self::$_configList[$type]))
+        if($nodeName && !key_exists($nodeName, self::$_configList[$type]))
         {
             throw new BizException("数据节点不存在");
         }
-        return self::$_configList[$type][$nodeName];
+        return ($nodeName)?self::$_configList[$type][$nodeName]:self::$_configList[$type];
     }
     public static function init()
     {
@@ -54,6 +54,11 @@ class ConfigManage
         if (file_exists($filepath))
         {
             self::$_configList['redis']=include($filepath);
+        }
+        $filepath=PROGECT_CONFIG_PATH.'decorator.php';
+        if (file_exists($filepath))
+        {
+            self::$_configList['decorator']=include($filepath);
         }
     }
 }

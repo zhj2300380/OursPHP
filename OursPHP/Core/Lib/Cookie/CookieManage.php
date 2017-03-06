@@ -6,7 +6,7 @@
  * Time: 20:08
  * Doc: Cookie操作类
  */
-namespace OursPHP\Core\Lib;
+namespace OursPHP\Core\Lib\Cookie;
 
 /** Cookies class 保存,读取,更新,清除cookies数据。可设置前缀。强制超时。数据可以是字符串,数组,对象等。
  *  Func:

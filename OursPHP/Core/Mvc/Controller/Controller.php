@@ -11,14 +11,15 @@ namespace OursPHP\Core\Mvc\Controller;
 
 use OursPHP\Core\Common\BizException;
 use OursPHP\Core\Mvc\View\SmartyView;
+
 class Controller
 {
     /**
      * @var string 控制器類型
      */
     protected $_app_type='web';
-	//拦截器
-	private $_Action=[];
+	//装饰器
+	private $_decorators=array();
 	//当前controler的默认layout,子类可以重写
 	public $_response;
 
@@ -41,7 +42,6 @@ class Controller
 
     /**
      * 设置为api访问模式
-     * restfull
      */
     protected function isApi()
     {
@@ -69,15 +69,35 @@ class Controller
         $this->{$action}($request, $response);
     }
 	/**
-     * 前置拦截器
+     * 前置装饰器
      */
-	public function befor() {}
+	public function befor()
+    {
+        foreach ($this->_decorators as $decorator)
+        {
+            $decorator->befor();
+        }
+    }
 
 	/**
-     * 后置拦截器
+     * 后置装饰器
      */
-	public function after() {}
-
+	public function after()
+    {
+        $decorators=array_reverse($this->_decorators);
+        foreach ($decorators as $decorator)
+        {
+            $decorator->after();
+        }
+    }
+    /**
+     * 添加装饰器
+     * @param IDrawDecorator $decorator
+     */
+    public function addDecorator(IDrawDecorator $decorator)
+    {
+        $this->_decorators[]=$decorator;
+    }
 
 	/**
      * 渲染模版文件

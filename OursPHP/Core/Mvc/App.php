@@ -11,6 +11,7 @@ namespace OursPHP\Core\Mvc;
 use OursPHP\Core\Mvc\Http\Request;
 use OursPHP\Core\Mvc\Http\Response;
 use OursPHP\Core\Common\BizException;
+use OursPHP\Init\ConfigManage;
 
 class App {
 
@@ -44,17 +45,54 @@ class App {
 
         $controller = $this->_app_namespace ."\\controller\\". $this->_controller.'controller';
         if (OURS_DEBUG) {
-            echo '<!-- '.$this->_app_namespace.'/'.$this->_controller.':'.$this->_action.'-->';
+            echo '<!-- '.$this->_app_namespace.'/'.$this->_controller.':'.$this->_action.'-->'."\r\n";
         }
         if (!class_exists($controller)){
             throw new BizException("no controller called $controller ");
         }
 
         $obj = new $controller($request, $response);
-//        if (!method_exists($obj, $this->_action))
-//        {
-//            throw new BizException("'$controller' has not method '{$this->_action}' ");
-//        }
+        /**
+         * 装饰器开始
+         */
+        $decoratorsArray=ConfigManage::getConfig('decorator');
+        if(!empty($decoratorsArray))
+        {
+            /**
+             * 全局装饰
+             */
+            if (isset($decoratorsArray['*']))
+            {
+                $_decorators=$decoratorsArray['*'];
+                foreach ($_decorators as $decorator)
+                {
+                    $obj->addDecorator($decorator);
+                }
+            }
+            if (isset($decoratorsArray[$this->_controller]))
+            {
+                $_decorators=$decoratorsArray[$this->_controller];
+                if (isset($_decorators['*']))
+                {
+                    $_c_decorators=$_decorators['*'];
+                    foreach ($_c_decorators as $decorator)
+                    {
+                        $obj->addDecorator($decorator);
+                    }
+                }
+                if (isset($_decorators[$this->_action]))
+                {
+                    $_c_a_decorators=$_decorators[$this->_action];
+                    foreach ($_c_a_decorators as $decorator)
+                    {
+                        $obj->addDecorator($decorator);
+                    }
+                }
+            }
+        }
+        /**
+         * 装饰器结束
+         */
 
         $obj->befor($this->_controller, $this->_action);
         $obj->doAction($this->_action,$request, $response);

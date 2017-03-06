@@ -6,8 +6,8 @@
  * Time: 20:48
  * Doc: 驗證碼操作類
  */
-namespace OursPHP\Core\Lib;
-
+namespace OursPHP\Core\Lib\Captcha;
+use OursPHP\Core\Lib\Cookie\CookieManage;
 class CaptchaManage
 {
     private $_charset = OURS_CHARSET;//随机因子
