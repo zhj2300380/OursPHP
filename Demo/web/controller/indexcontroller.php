@@ -13,14 +13,16 @@ use OursPHP\Core\Mvc\Controller\Controller;
 use App\Dao\Test;
 use OursPHP\Core\Lib\Cache\Memcached;
 use OursPHP\Core\Lib\Cache\Redis;
-use OursPHP\Core\Lib\CookieManage;
-use OursPHP\Core\Lib\CaptchaManage;
+use OursPHP\Core\Lib\Cookie\CookieManage;
+use OursPHP\Core\Lib\Captcha\CaptchaManage;
+use OursPHP\Core\Lib\Http\HttpClient;
 
 class IndexController  extends Controller
 {
 	public function __construct($request, &$response) {
 		header("Content-type: text/html; charset=utf-8");
 		parent::__construct($request, $response);
+		//$this->befor()
 	}
 	public function index($request,$response) {
 
@@ -70,7 +72,6 @@ class IndexController  extends Controller
 
         $this->renderSmarty();
 	}
-
     /**
      * cookie 读取
      */
@@ -96,7 +97,7 @@ class IndexController  extends Controller
      */
 	public function CreateCode($request,$response)
     {
-        $cc=CaptchaManage::getInstance()->doImg();
+        CaptchaManage::getInstance()->doImg();
     }
 
     /**

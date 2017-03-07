@@ -37,7 +37,7 @@ $options=array
         [
             'index'=>
                 [
-                    new App\Decorator\ShowTimeDecorator()
+                    App\Decorator\ShowTimeDecorator::class
                 ]
         ]
 );

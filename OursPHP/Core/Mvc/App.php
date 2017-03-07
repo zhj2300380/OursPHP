@@ -66,7 +66,7 @@ class App {
                 $_decorators=$decoratorsArray['*'];
                 foreach ($_decorators as $decorator)
                 {
-                    $obj->addDecorator($decorator);
+                    $obj->addDecorator(new $decorator);
                 }
             }
             if (isset($decoratorsArray[$this->_controller]))
@@ -77,7 +77,7 @@ class App {
                     $_c_decorators=$_decorators['*'];
                     foreach ($_c_decorators as $decorator)
                     {
-                        $obj->addDecorator($decorator);
+                        $obj->addDecorator(new $decorator);
                     }
                 }
                 if (isset($_decorators[$this->_action]))
@@ -85,7 +85,7 @@ class App {
                     $_c_a_decorators=$_decorators[$this->_action];
                     foreach ($_c_a_decorators as $decorator)
                     {
-                        $obj->addDecorator($decorator);
+                        $obj->addDecorator(new $decorator);
                     }
                 }
             }
