@@ -18,30 +18,25 @@ class App {
     private $_controller = 'index';
     private $_action = 'index';
     private $_app_namespace = '';
+    private $_request;
 
-    public function __construct($controller, $action,$app_namespace = '') {
-        if ($controller)
-            $this->_controller = $controller;
-        if ($action)
-            $this->_action = $action;
-        if(!empty($app_type))
-        {
-            $this->_app_type=$app_type;
-        }
-        if($app_namespace)
-            $this->_app_namespace = $app_namespace;
+    public function __construct() {
+        $this->_request = Route::createRequest();
+        if ($this->_request->_c)
+            $this->_controller = $this->_request->_c;
+        if ($this->_request->_a)
+            $this->_action = $this->_request->_a;
+            $this->_app_namespace = basename (WEB_PATH);
     }
 
     /**
      * 启动一个controller，执行指定的action方法，渲染controller/action模版
      * @throws Exception
      */
-    public function run() {
-        $request = Request::getInstance();
+    public function run(){
         $response = new Response();
         $response->_controller = $this->_controller;
         $response->_action = $this->_action;
-
 
         $controller = $this->_app_namespace ."\\controller\\". $this->_controller.'controller';
         if (OURS_DEBUG) {
@@ -51,7 +46,7 @@ class App {
             throw new BizException("no controller called $controller ");
         }
 
-        $obj = new $controller($request, $response);
+        $obj = new $controller($this->_request, $response);
         /**
          * 装饰器开始
          */
@@ -95,10 +90,10 @@ class App {
          */
 
         $obj->befor($this->_controller, $this->_action);
-        $obj->doAction($this->_action,$request, $response);
+        $obj->doAction($this->_action,$this->_request, $response);
         $obj->after($this->_controller, $this->_action);
-    }
 
+    }
     /**
      * 把约定格式的url query string 转成静态地址
      * 为了便于管理，转换函数为原action函数前前辍 'url_'

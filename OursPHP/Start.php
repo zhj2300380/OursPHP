@@ -75,24 +75,4 @@ spl_autoload_register('progect_autoload');
  * 配置加载
  */
 OursPHP\Init\ConfigManage::init();
-
-use OursPHP\Core\Common\BizException;
-use OursPHP\Core\Mvc\Http\Request;
-use OursPHP\Core\Mvc\App;
-function Start()
-{
-    $request = Request::getInstance();
-    $controller = $request->_c;
-    $action = $request->_a;
-    $app_namespace = basename (WEB_PATH);//'website';
-
-    $mvc = new App($controller, $action,$app_namespace);
-
-    ob_start();
-    try {
-        $mvc->run();
-    } catch (BizException $e) {
-        throw $e;
-    }
-    ob_end_flush();
-}
+OursPHP\Init\WebManage::webStart();
