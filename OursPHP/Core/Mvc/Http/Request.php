@@ -149,9 +149,24 @@ class Request {
     function filter_input($data='') {
         if($this->_openfilter)
         {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
+            if(is_array($data))
+            {
+                foreach ($data as &$item)
+                {
+                    if(!is_array($item))
+                    {
+                        $item = trim($item);
+                        $item = stripslashes($item);
+                        $item = htmlspecialchars($item);
+                    }
+                }
+            }
+            else
+                {
+                    $data = trim($data);
+                    $data = stripslashes($data);
+                    $data = htmlspecialchars($data);
+                }
         }
         return $data;
     }
