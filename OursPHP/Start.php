@@ -27,6 +27,7 @@ define('OURS_CORE_PATH', OURS_PATH . 'Core' . OURS_DS);
 define('OURS_LIB_PATH', OURS_CORE_PATH . 'Lib' . OURS_DS);
 defined('ROOT_PATH') or define('ROOT_PATH', dirname($_SERVER['SCRIPT_FILENAME']) . OURS_DS);//documentroot目录
 defined('WEB_PATH') or define('WEB_PATH', dirname(realpath(ROOT_PATH)) . OURS_DS);//当前站点所在的目录
+defined('WEB_NAMESPACE') or define('WEB_NAMESPACE', basename (WEB_PATH) );
 defined('WEB_TMP_PATH') or define('WEB_TMP_PATH', WEB_PATH.'tmp' . OURS_DS);//当前站点模版缓存目录
 defined('PROGECT_PATH') or define('PROGECT_PATH', dirname(realpath(WEB_PATH)) . OURS_DS);//当前项目所在目录
 defined('PROGECT_CONFIG_PATH') or define('PROGECT_CONFIG_PATH', PROGECT_PATH.'Config' . OURS_DS);//当前项目配置文件所在目录

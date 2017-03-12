@@ -20,13 +20,13 @@ class App {
     private $_app_namespace = '';
     private $_request;
 
-    public function __construct() {
-        $this->_request = Route::createRequest();
+    public function __construct($postfix) {
+        $this->_request = Route::createRequest($postfix);
         if ($this->_request->_c)
             $this->_controller = $this->_request->_c;
         if ($this->_request->_a)
             $this->_action = $this->_request->_a;
-            $this->_app_namespace = basename (WEB_PATH);
+            $this->_app_namespace = WEB_NAMESPACE;
     }
 
     /**

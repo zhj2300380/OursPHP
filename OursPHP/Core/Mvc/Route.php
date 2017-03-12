@@ -10,9 +10,12 @@ namespace OursPHP\Core\Mvc;
 use OursPHP\Core\Mvc\Http\Request;
 class Route
 {
-    public static function createRequest() {
+    /**
+     * @param string $postfix
+     * @return Request 伪静态后缀包括.
+     */
+    public static function createRequest($postfix='') {
         $request = Request::getInstance();
-
         if($request->_c)
         {
             /**
@@ -22,13 +25,25 @@ class Route
         }
 
         /**
-         * 没有_c和_a则返回restfull模式
+         * 没有_c和_a则url属于restfull模式
          */
         $query = array();
         if(!$request->_c && isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI']!='/')
         {
-            $path=$_SERVER['REQUEST_URI'];
-            $patharray=explode('/',trim($path,'/'));
+            $requesturi=$_SERVER['REQUEST_URI'];
+            $requestarray=parse_url($requesturi);
+            $paramstr=isset($requestarray['query'])?$requestarray['query']:false;
+            if($paramstr)
+            {
+                parse_str($paramstr,$param);
+                $request->ModifyGet($param);
+            }
+            $requestpath=$requestarray['path'];
+            $postfixindexof=strripos($requestpath,$postfix);
+            if(!empty($postfix) && $postfixindexof!=false){
+                $requestpath=substr($requestpath,0,$postfixindexof);
+            }
+            $patharray=explode('/',trim($requestpath,'/'));
             if(isset($patharray[0]))
             {
                 $query['_c']=$patharray[0];
@@ -55,4 +70,5 @@ class Route
         }
         return $request;
     }
+
 }

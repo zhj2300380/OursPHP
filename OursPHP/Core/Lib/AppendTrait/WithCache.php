@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Jack Zhao
+ * User: Jack
  * Date: 2017/3/6
  * Time: 14:35
  * Doc:
@@ -19,6 +19,7 @@ trait WithCache
      * @param $name
      * @param $params
      * @return mixed
+     * @throws BizException
      */
     public function __call($name, $params)
     {
@@ -42,7 +43,7 @@ trait WithCache
                 return $data;
             }catch (BizException $ex)
             {
-
+                //throw $ex;
             }
             try
             {
@@ -50,9 +51,9 @@ trait WithCache
                 return $data;
             }catch (BizException $ex)
             {
-
+                //throw $ex;
             }
+            return call_user_func_array(array($this, $relFunc), $params);
         }
     }
-
 }

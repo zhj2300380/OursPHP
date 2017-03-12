@@ -66,6 +66,13 @@ class Request {
     }
 
     /**
+     * @return string 获取PHP输入流
+     */
+    public function getInputStream()
+    {
+        return file_get_contents("php://input");
+    }
+    /**
      * 返回 $_POST[$index] | default
      * @param string $index
      * @param string $default 没有取到的时候的默认值
@@ -113,8 +120,11 @@ class Request {
         $this->allowModify = true;
 
         foreach ($get as $k=>$v)
+        {
+            $v=$this->filter_input($v);
+            $v = preg_replace("/".self::$getfilter."/is", self::REPLACEMENT, $v);
             $this->$k = $v;
-
+        }
         $this->allowModify = false;
     }
 

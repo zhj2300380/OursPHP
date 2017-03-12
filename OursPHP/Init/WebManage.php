@@ -10,9 +10,14 @@ namespace OursPHP\Init;
 
 use OursPHP\Core\Common\BizException;
 use OursPHP\Core\Mvc\App;
+use OursPHP\Init\ConfigManage;
 class WebManage{
     public static function  webStart(){
-        $mvc = new App();
+        $postfix=ConfigManage::getConfig('route',WEB_NAMESPACE);
+        if (OURS_DEBUG) {
+            echo '<!-- '.WEB_NAMESPACE.':'.$postfix.'-->'."\r\n";
+        }
+        $mvc = new App($postfix);
         ob_start();
         try {
             $mvc->run();
