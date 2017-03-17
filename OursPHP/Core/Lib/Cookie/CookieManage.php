@@ -25,24 +25,9 @@ class CookieManage
 {
     private $_prefix = '';                         // cookie prefix
     private $_securekey = OURS_SECUREKEY;          // encrypt key
-    private $_expire = 3600;                        // default expire
+    private $_expire = 0;                        // default expire
 
 
-    private static $_cookiemanage;
-
-    /**
-     * 单列
-     * @param string $prefix
-     * @param int $expire
-     * @param string $securekey
-     * @return CookieManage
-     */
-    public static function  getInstance($prefix='', $expire=300, $securekey='') {
-        if (empty(self::$_cookiemanage)) {
-            self::$_cookiemanage = new self($prefix, $expire, $securekey);
-        }
-        return self::$_cookiemanage;
-    }
     /** 初始化
      * @param String $prefix   cookie prefix
      * @param int  $expire   过期时间
@@ -64,22 +49,30 @@ class CookieManage
 
     }
 
-    /** 设置cookie
-     * @param String $name  cookie name
-     * @param mixed $value cookie value 可以是字符串,数组,对象等
-     * @param int  $expire 过期时间
+    /**
+     * 设置cookie
+     * @param $name
+     * @param $value
+     * @param int $expire
+     * @return bool
      */
     public function set($name, $value, $expire=0){
 
         $cookie_name = $this->getName($name);
-        $cookie_expire = time() + ($expire? $expire : $this->_expire);
+        if($expire==0)
+        {
+            $cookie_expire=($this->_expire)>0?time()+$this->_expire:0;
+        }
+        if($expire>0)
+        {
+            $cookie_expire=time() + $expire;
+        }
         $cookie_value = $this->pack($value, $cookie_expire);
         $cookie_value = $this->authcode($cookie_value, 'ENCODE', $this->_securekey);
 
         if($cookie_name && $cookie_value && $cookie_expire){
-            return setcookie($cookie_name, $cookie_value, $cookie_expire);
+            return setcookie($cookie_name, $cookie_value, $cookie_expire,'/');
         }
-
     }
 
     /** 读取cookie
@@ -117,7 +110,7 @@ class CookieManage
             $old_cookie_value = $this->authcode($_COOKIE[$cookie_name], 'DECODE', $this->_securekey);
             $old_cookie_value = $this->unpack($old_cookie_value);
 
-            if(isset($old_cookie_value[1]) && $old_cookie_vlaue[1]>0){ // 获取之前的过期时间
+            if(isset($old_cookie_value[1]) && $old_cookie_value[1]>0){ // 获取之前的过期时间
 
                 $cookie_expire = $old_cookie_value[1];
 
@@ -134,19 +127,23 @@ class CookieManage
         return false;
     }
 
-    /** 清除cookie
-     * @param String $name  cookie name
+    /**
+     * 清除cookie
+     * @param $name
+     * @return bool
      */
     public function clear($name){
 
         $cookie_name = $this->getName($name);
-        return setcookie($cookie_name);
+        return setcookie($cookie_name,null,-1,"/");
     }
 
-    /** 设置前缀
-     * @param String $prefix cookie prefix
+    /**
+     * 设置前缀
+     * @param string $prefix
+     * @return $this
      */
-    public function setPrefix($prefix){
+    public function setPrefix($prefix=''){
 
         if(is_string($prefix) && $prefix!=''){
             $this->_prefix = $prefix;
@@ -180,7 +177,7 @@ class CookieManage
      * @param int  $expire  过期时间 用于判断
      * @return
      */
-    private function pack($data, $expire){
+    private function pack($data='', $expire){
 
         if($data===''){
             return '';
@@ -196,7 +193,7 @@ class CookieManage
      * @param Mixed $data 数据
      * @return       array(数据,过期时间)
      */
-    private function unpack($data){
+    private function unpack($data=''){
 
         if($data===''){
             return array('', 0);
@@ -212,11 +209,11 @@ class CookieManage
         }
         return array('', 0);
     }
-
-    /** 加密/解密数据
-     * @param String $str    原文或密文
-     * @param String $operation ENCODE or DECODE
-     * @return String      根据设置返回明文活密文
+    /**
+     * 加密/解密数据
+     * @param $string   原文或密文
+     * @param string $operation ENCODE or DECODE
+     * @return string   根据设置返回明文活密文
      */
     private function authcode($string, $operation = 'DECODE'){
 

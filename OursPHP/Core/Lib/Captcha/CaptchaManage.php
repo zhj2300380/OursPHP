@@ -74,7 +74,8 @@ class CaptchaManage
         for ($i=0;$i<$this->_codelen;$i++) {
             $this->_code .= $this->_charset[mt_rand(0,$_len)];
         }
-        CookieManage::getInstance('ck')->set('cc',$this->getCode(),$this->_expire);
+        $cookieManage=new CookieManage('ck');
+        $cookieManage->set('cc',$this->getCode(),$this->_expire);
     }
     //生成背景
     private function createBg() {
@@ -132,7 +133,8 @@ class CaptchaManage
     public function doCheck($code='')
     {
         $rel=false;
-        $this->_code=CookieManage::getInstance('ck')->get('cc');
+        $cookieManage=new CookieManage('ck');
+        $this->_code=$cookieManage->get('cc');
         if($code===$this->_code)
         {
             $rel=true;

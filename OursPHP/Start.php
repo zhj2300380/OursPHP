@@ -54,13 +54,24 @@ function ours_autoload( $class ) {
     }
 }
 /**
- * 项目自动加载
+ * 项目公共部分自动加载
  * @param $class
  */
-function progect_autoload( $class ) {
+function progect_app_autoload( $class ) {
     $file = str_replace('\\','/',PROGECT_PATH.$class . '.php');
     if (OURS_DEBUG) {
-        echo '<!-- include '.$class.'-->'."\r\n";
+        echo '<!-- '.$class.'include '.$file.'-->'."\r\n";
+    }
+    if (is_file($file)) {
+        require_once($file);
+    }
+}
+
+
+function progect_site_autoload( $class ) {
+    $file = str_replace('\\','/',PROGECT_PATH.strtolower($class) . '.php');
+    if (OURS_DEBUG) {
+        echo '<!-- '.$class.'include '.$file.'-->'."\r\n";
     }
     if (is_file($file)) {
         require_once($file);
@@ -71,7 +82,9 @@ function progect_autoload( $class ) {
  * 加载注册
  */
 spl_autoload_register('ours_autoload');
-spl_autoload_register('progect_autoload');
+spl_autoload_register('progect_app_autoload');
+spl_autoload_register('progect_site_autoload');
+
 /**
  * 配置加载
  */

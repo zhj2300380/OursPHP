@@ -91,17 +91,31 @@ abstract class BaseDao{
 	//dao对应表主键名，由子类实现
 	protected abstract function getPKey();
 
-	
-	/**
-	 * 根据主键查找一条记录
-	 * @param string $pk_value 主键的值
-	 */
-	public function findOne($pk_value) {
-		//$sql = "select * from {$this->getTableName()} where {$this->getPkeyWhere($pk_value)} limit 1";
-		$sql = "select * from {$this->getTableName()} where {$this->getPkeyWhereEx()} limit 1";
-		$binds=$this->getPkeyBind($pk_value);
-		//增加方注入
-		return $this->_pdo->getRow($sql,$binds);
+
+    /**
+     * 根据主键查找一条记录
+     * @param string $pk_value 主键的值
+     */
+    public function findByPkey($pk_value) {
+        //$sql = "select * from {$this->getTableName()} where {$this->getPkeyWhere($pk_value)} limit 1";
+        $sql = "select * from {$this->getTableName()} where {$this->getPkeyWhereEx()} limit 1";
+        $binds=$this->getPkeyBind($pk_value);
+        //增加方注入
+        return $this->_pdo->getRow($sql,$binds);
+    }
+
+    /**
+     * @param array $binds
+     * @param string $where
+     * @param array $feild
+     * @param string $group
+     * @param string $having
+     * @param string $order
+     * @return bool
+     */
+	public function findOne(array $binds=[], $where='',array $feild=[],$group='',$having='',$order='') {
+		$rows=self::findAll($binds, $where, $feild,$group,$having,$order,1);
+		return isset($rows[0])?$rows[0]:null;
 	}
 	
 	/**
@@ -261,16 +275,17 @@ abstract class BaseDao{
 		return $this->_pdo->finObjs($className, $sql, array($value));
 	}
 
-	/**
-	 * 查询
-	 * @param array $feild
-	 * @param string $where
-	 * @param string $group
-	 * @param string $having
-	 * @param string $order
-	 * @param string $limit
-	 */
-	public function findAll(array $binds=[], array $feild=[],$where='',$group='',$having='',$order='',$limit=100)
+    /**
+     * @param array $binds
+     * @param string $where
+     * @param array $feild
+     * @param string $group
+     * @param string $having
+     * @param string $order
+     * @param int $limit
+     * @return mixed
+     */
+	public function findAll(array $binds=[], $where='',array $feild=[],$group='',$having='',$order='',$limit=100)
 	{
 		$feildstr='*';
 		if(!empty($feild)) {
@@ -289,9 +304,7 @@ abstract class BaseDao{
 		if(!empty($order)) {
 			$sql.="order by $order ";
 		}
-		if(strstr($limit,',')) {
-			$sql.="limit $limit";
-		}elseif($limit!=0) {
+		if($limit!=0) {
 			$sql.="limit $limit";
 		}
 		return $this->_pdo->getRows($sql, $binds);

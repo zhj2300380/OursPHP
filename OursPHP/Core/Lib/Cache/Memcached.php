@@ -11,7 +11,7 @@ namespace OursPHP\Core\Lib\Cache;
 use OursPHP\Init\ConfigManage;
 class Memcached {
 
-    private static $_memcached;
+    private static $_cachelist;
 
     private function __construct() {}
 
@@ -21,19 +21,21 @@ class Memcached {
      * @return \Memcached
      */
     public static function  getInstance($nodeName='default') {
-        if (empty(self::$_memcached)) {
-            self::$_memcached = new \Memcached();
+        if(!isset(self::$_cachelist[$nodeName]))
+        {
+            $_memcached = new \Memcached();
             $options=ConfigManage::getConfig('memcached',$nodeName);
-            self::$_memcached->addServers($options);
+            $_memcached->addServers($options);
+            self::$_cachelist[$nodeName]=$_memcached;
         }
-        return self::$_memcached;
+        return self::$_cachelist[$nodeName];
     }
     public static function accessCache($key, $time, $get_data_func, $func_params=array()) {
-        self::getInstance();
-        $data = self::$_memcached->get($key);
+        $_memcached=self::getInstance();
+        $_memcached->get($key);
         if (empty($data) || isset($_GET['_refresh'])) {
             $data = call_user_func_array($get_data_func, $func_params);
-            self::$_memcached->set($key, $data, $time);
+            $_memcached->set($key, $data, $time);
         }
         return $data;
     }
@@ -47,24 +49,24 @@ class Memcached {
      * @return mixed
      */
     public static function accessCacheWithLock($key, $time, $get_data_func, $func_params=array()) {
-        self::getInstance();
-        $data = self::$_memcached->get($key);
+        $_memcached=self::getInstance();
+        $data = $_memcached->get($key);
 
         if ($data && empty($_GET['_refresh']))
             return $data;
         else
-            self::$_memcached->delete($key);
+            $_memcached->delete($key);
 
         //防止并发取缓存
-        if(self::$_memcached->add($key, null)) {
+        if($_memcached->add($key, null)) {
             $data = call_user_func_array($get_data_func, $func_params);
             if (!empty($data))
-                self::$_memcached->set($key, $data, $time);
+                $_memcached->set($key, $data, $time);
 
         } else {
             for($i=0; $i<10; $i++) { //5秒没有反应，就出白页吧，系统貌似已经不行了
                 sleep(0.5);
-                $data = self::$_memcached->get($key);
+                $data = $_memcached->get($key);
                 if ($data !== false)
                     break;
 
