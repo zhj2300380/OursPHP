@@ -1,0 +1,40 @@
+<li class="active">
+    <a href="/">
+        <i class="menu-icon fa fa-tachometer"></i>
+        <span class="menu-text"> Dashboard </span>
+    </a>
+
+    <b class="arrow"></b>
+</li>
+{{if !empty($menulist)}}
+{{foreach $menulist as $menu}}
+{{if $menu['ismenu']==1 && isset($rolelist[strtolower($menu['uri'])])}}
+<li class="">
+    <a href="#" class="dropdown-toggle">
+        <i class="menu-icon {{$menu['icon']}}"></i>
+        <span class="menu-text"> {{$menu['name']}} </span>
+        <b class="arrow fa fa-angle-down"></b>
+    </a>
+
+    <b class="arrow"></b>
+
+    <ul class="submenu">
+        {{if isset($menu['sub']) && !empty($menu['sub'])}}
+        {{foreach $menu['sub'] as $sub}}
+        {{if $sub['ismenu']==1 && in_array(strtolower($sub['uri']),$rolelist[strtolower($menu['uri'])])}}
+        <li class="">
+            <a href="/{{$menu['uri']}}/{{$sub['uri']}}">
+                <i class="menu-icon fa fa-caret-right"></i>
+                {{$sub['name']}}
+            </a>
+
+            <b class="arrow"></b>
+        </li>
+        {{/if}}
+        {{/foreach}}
+        {{/if}}
+    </ul>
+</li>
+{{/if}}
+{{/foreach}}
+{{/if}}

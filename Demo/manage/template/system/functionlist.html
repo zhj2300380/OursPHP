@@ -1,0 +1,157 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="function-table"
+                   class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th class="col-sm-3">功能名称</th>
+                    <th style="width: 80px;">菜单显示</th>
+                    <th class="col-sm-3">链接地址</th>
+                    <th class="col-sm-1">隶属</th>
+                    <th style="width: 80px;">状态</th>
+                    <th><a class="blue" title="添加新系统菜单"
+                           href="/{{$_controller}}/functionAdd"> <i
+                            class="glyphicon glyphicon-plus bigger-130"></i>
+                    </a></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {{foreach $rootMenu as $root}}
+                <tr>
+                    <td><i class="{{$root['icon']}}"></i>{{$root['name']}}{{if count($root['sub'])>0}}————<a data-toggle="collapse" data-parent="#function-table"
+                                                                                                             href="#function-{{$root['id']}}"><i class="glyphicon glyphicon-plus"></i></a>{{/if}}</th>
+                    <td>
+
+
+                        {{if $root['ismenu']==1}}
+                        <a class="blue" href="javascript:del('/{{$_controller}}/functionsetmenu?id={{$root['id']}}')">
+						<span title="点击取消菜单显示"
+                              class="badge badge-warning">是</span></a>
+                        {{else}} <a class="blue" href="javascript:del('/{{$_controller}}/functionsetmenu?id={{$root['id']}}')"><span
+                            class="badge" title="点击设置菜单显示">否</span></a>
+                        {{/if}}
+
+                    </td>
+                    <td>/{{$root['uri']}}/index</td>
+                    <td style="width: 200px;"></td>
+                    <td>
+                        {{if $root['status']==1}}
+                        <a class="blue" href="javascript:del('/{{$_controller}}/functionlock?id={{$root['id']}}')">
+                            <span title="点击锁定" class="badge badge-warning">正常</span></a>
+                        {{else}}
+                        <a class="blue" href="javascript:del('/{{$_controller}}/functionlock?id={{$root['id']}}')">
+                            <span title="点击解锁" class="badge">锁定</span></a> {{/if}}
+                    </td>
+                    <td><div class="visible-md visible-lg action-buttons">
+                        <a class="blue" title="菜单编辑"
+                           href="/{{$_controller}}/functionadd?id={{$root['id']}}"><i
+                                class="fa fa-pencil bigger-130"></i> </a>
+                        {{if $root['status']==1}}
+                        <a class="blue" title="点击锁定" href="javascript:del('/{{$_controller}}/functionlock?id={{$root['id']}}')">
+                        <i class="fa fa-unlock bigger-130"></i>
+                    </a> {{else}}
+                        <a class="blue" title="点击解锁"
+                                     href="javascript:del('/{{$_controller}}/functionlock?id={{$root['id']}}')">
+                        <i class=" fa fa-lock bigger-130"></i>
+                    </a> {{/if}}
+                        {{if count($root['sub'])==0}}
+                        <a class="blue" title="删除"
+                           href="javascript:del('/{{$_controller}}/functiondel?id={{$root['id']}}')">
+                            <i class="fa fa-trash-o bigger-130"></i>
+                        </a>
+                        {{/if}}
+                    </div></td>
+                </tr>
+                {{if count($root['sub'])>0}}
+
+                <tr>
+                    <td colspan="6">
+
+                        <table id="function-{{$root['id']}}"
+                               class="table table-striped table-hover collapse">
+                            <thead>
+                            <tr>
+                                <th class="col-sm-3">功能名称</th>
+                                <th style="width: 80px;">菜单显示</th>
+                                <th class="col-sm-3">链接地址</th>
+                                <th class="col-sm-1">隶属</th>
+                                <th style="width: 80px;">状态</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            {{foreach $root['sub'] as $child}}
+                            <tr>
+                                <td><i class="glyphicon glyphicon-play-circle"></i>————{{$child['name']}}</th>
+                                <td>
+
+                                    {{if $child['ismenu']==1}}
+                                    <a class="blue" href="javascript:del('/{{$_controller}}/functionsetmenu?id={{$child['id']}}')">
+                                <span title="点击取消菜单显示"
+                                      class="badge badge-warning">是</span></a>
+                                    {{else}} <a class="blue" href="javascript:del('/{{$_controller}}/functionsetmenu?id={{$child['id']}}')"><span
+                                        class="badge" title="点击设置菜单显示">否</span></a>
+                                    {{/if}}
+
+                                </td>
+                                <td>/{{$root['uri']}}/{{$child['uri']}}</th>
+                                <td style="width: 200px;">父：{{$root['name']}}</th>
+                                <td>{{if $child['status']==1}}
+                                    <a class="blue" href="javascript:del('/{{$_controller}}/functionlock?id={{$child['id']}}')">
+                                        <span title="点击锁定" class="badge badge-warning">正常</span></a>
+                                    {{else}}
+                                    <a class="blue" href="javascript:del('/{{$_controller}}/functionlock?id={{$child['id']}}')">
+                                        <span title="点击解锁" class="badge">锁定</span></a> {{/if}}
+                                </td>
+                                <td><div class="visible-md visible-lg action-buttons">
+                                    <a class="blue" title="功能编辑"
+                                       href="/{{$_controller}}/functionadd?id={{$child['id']}}"><i
+                                            class="fa fa-pencil bigger-130"></i> </a>
+                                    {{if $child['status']==1}}
+                                    <a	class="blue" title="点击锁定"
+                                          href="javascript:del('/{{$_controller}}/functionlock?id={{$child['id']}}')">
+                                        <i class="fa fa-unlock bigger-130"></i>
+                                    </a> {{else}} <a class="blue" title="点击解锁"
+                                                     href="javascript:del('/{{$_controller}}/functionlock?id={{$child['id']}}')">
+                                    <i class=" fa fa-lock bigger-130"></i>
+                                </a> {{/if}} <a class="blue" title="删除"
+                                                href="javascript:del('/{{$_controller}}/functiondel?id={{$child['id']}}')">
+                                    <i class="fa fa-trash-o bigger-130"></i>
+                                </a>
+                                </div></td>
+                            </tr>
+                            {{/foreach}}
+
+
+                            <tbody>
+                            </tbody>
+                        </table>
+
+
+                    </td>
+
+                </tr>
+
+                {{/if}}
+                {{/foreach}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="dataTables_paginate paging_bootstrap">{{$pageLink}}</div>
+    </div>
+</div>
+
+<script>
+    jQuery(function($) {
+        $('.glyphicon.glyphicon-plus').each(function(){
+            $(this).on('click', function(){
+                $(this).toggleClass('glyphicon-minus');
+            });
+        });
+    })
+</script>

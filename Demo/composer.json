@@ -1,0 +1,15 @@
+{
+    "name": "jack/oursphpdemo",
+    "description": "oursphp demo",
+    "type": "project",
+    "require": {
+        "symfony/var-dumper": "^3.2"
+    },
+    "license": "1.0.0",
+    "authors": [
+        {
+            "name": "Jack Zhao",
+            "email": "xhj_hk@163.com"
+        }
+    ]
+}

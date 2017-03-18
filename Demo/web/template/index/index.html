@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{$title}}</title>
+</head>
+<body>
+{{$body}}
+<div>
+    {{foreach $rows as $item}}
+    {{$item['name']}}
+    {{/foreach}}
+</div>
+</body>
+</html>

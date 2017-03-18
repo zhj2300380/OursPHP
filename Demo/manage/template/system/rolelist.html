@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="function-table"
+                   class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th  class="col-sm-1">角色名称</th>
+                    <th class="col-sm-3">角色描述</th>
+                    <th style="width: 80px;">状态</th>
+                    <th><a class="blue" title="添加新角色"
+                           href="/{{$_controller}}/roleadd"> <i
+                            class="glyphicon glyphicon-plus bigger-130"></i>
+                    </a></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {{foreach $rows as $row}}
+                <tr>
+                    <td>{{$row['name']}}</th>
+                    <td>
+                        {{$row['description']}}
+                    </td>
+                    <td>
+                        {{if $row['status']==1}}
+                        <a class="blue" href="javascript:del('/{{$_controller}}/rolelock?id={{$row['id']}}')">
+                            <span title="点击锁定" class="badge badge-warning">正常</span></a>
+                        {{else}}
+                        <a class="blue" href="javascript:del('/{{$_controller}}/rolelock?id={{$row['id']}}')">
+                            <span title="点击解锁" class="badge">锁定</span></a>
+                        {{/if}}
+                    </td>
+                    <td><div class="visible-md visible-lg action-buttons">
+                        <a class="blue" title="编辑"
+                           href="/{{$_controller}}/roleadd?id={{$row['id']}}"><i
+                                class="fa fa-pencil bigger-130"></i> </a>
+                        {{if $row['status']==1}} <a
+                            class="blue" title="点击锁定" href="javascript:del('/{{$_controller}}/rolelock?id={{$row['id']}}')">
+                        <i class="fa fa-unlock bigger-130"></i>
+                    </a> {{else}} <a class="blue" title="点击解锁"
+                                     href="javascript:del('/{{$_controller}}/rolelock?id={{$row['id']}}')">
+                        <i class=" fa fa-lock bigger-130"></i>
+                    </a> {{/if}}
+
+                        <a class="blue" title="删除"
+                           href="javascript:del('/{{$_controller}}/roledel?id={{$row['id']}}')">
+                            <i class="fa fa-trash-o bigger-130"></i>
+                        </a>
+                    </div></td>
+                </tr>
+                {{/foreach}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="dataTables_paginate paging_bootstrap">{{$pageLink}}</div>
+    </div>
+</div>
+
+<script>
+    jQuery(function($) {
+        $('.glyphicon.glyphicon-plus').each(function(){
+            $(this).on('click', function(){
+                $(this).toggleClass('glyphicon-minus');
+            });
+        });
+    })
+</script>
