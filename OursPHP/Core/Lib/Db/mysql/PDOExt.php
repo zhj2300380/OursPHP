@@ -118,6 +118,7 @@ class PDOext extends PDO {
 	public function getRow($sql, array $binds=array()) {
 		$sth = $this->prepare($sql);
 		self::bindValue($sth, $binds);
+		//dump($sth);
 		$this->execute($sth);
 		$this->_lastErrorInfo = $sth->errorInfo();
 		$out = $sth->fetch();
@@ -135,6 +136,7 @@ class PDOext extends PDO {
 	public function getRows($sql, array $binds=array()) {
 		$sth = $this->prepare($sql);
 		self::bindValue($sth, $binds);
+        //dump($sth);
 		$this->execute($sth);
 		$this->_lastErrorInfo = $sth->errorInfo();
 		$out = $sth->fetchAll();
@@ -149,9 +151,6 @@ class PDOext extends PDO {
 	 * @return boolean
 	 */
 	public function insert($table, array $data) {
-		
-		
-		
 		$ks = array();
 		foreach (array_keys($data) as $k) {
 			if (in_array($k, self::$keys))
@@ -174,12 +173,12 @@ class PDOext extends PDO {
 	/**
 	 * 插入多条数据 
 	 * @param string $table
-	 * @param array $data
+	 * @param array $datas
 	 * @return boolean
 	 */
-	public function inserts($table, array $dataarray) {
+	public function inserts($table, array $datas) {
 		$ks = array();
-		foreach (array_keys($dataarray[0]) as $k) {
+		foreach (array_keys($datas[0]) as $k) {
 			if (in_array($k, self::$keys))
 				$k = "`$k`";
 			$ks[] = $k;
@@ -188,7 +187,7 @@ class PDOext extends PDO {
 		$i=0;
 		$sqlV='';
 		$newdata=[];
-		foreach ($dataarray as &$item)
+		foreach ($datas as &$item)
 		{
 			$keys=array_keys($item);
 			$_sqlV = ':'.implode($i.', :', $keys).$i;
@@ -273,9 +272,10 @@ class PDOext extends PDO {
 	 * @param string $where
 	 * @return boolean
 	 */
-	public function delete($table, $where) {
+	public function delete($table, $where,array $data=[]) {
 		$sql = "delete from $table where $where";
 		$sth = $this->prepare($sql);
+        self::bindValue($sth, $data);
 		$out = $this->execute($sth);
 		$sth->closeCursor();
 		return $out;

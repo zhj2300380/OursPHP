@@ -68,7 +68,8 @@ function progect_app_autoload( $class ) {
 }
 
 
-function progect_site_autoload( $class ) {
+function progect_site_autoload( $class )
+{
     $file = str_replace('\\','/',PROGECT_PATH.strtolower($class) . '.php');
     if (OURS_DEBUG) {
         echo '<!-- '.$class.'include '.$file.'-->'."\r\n";

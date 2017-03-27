@@ -94,13 +94,12 @@ abstract class BaseDao{
 
     /**
      * 根据主键查找一条记录
-     * @param string $pk_value 主键的值
+     * @param $pk_value
+     * @return mixed
      */
     public function findByPkey($pk_value) {
-        //$sql = "select * from {$this->getTableName()} where {$this->getPkeyWhere($pk_value)} limit 1";
         $sql = "select * from {$this->getTableName()} where {$this->getPkeyWhereEx()} limit 1";
         $binds=$this->getPkeyBind($pk_value);
-        //增加方注入
         return $this->_pdo->getRow($sql,$binds);
     }
 
@@ -114,7 +113,7 @@ abstract class BaseDao{
      * @return bool
      */
 	public function findOne(array $binds=[], $where='',array $feild=[],$group='',$having='',$order='') {
-		$rows=self::findAll($binds, $where, $feild,$group,$having,$order,1);
+		$rows=self::findAll($binds, $where,1, $feild,$group,$having,$order);
 		return isset($rows[0])?$rows[0]:null;
 	}
 	
@@ -285,7 +284,7 @@ abstract class BaseDao{
      * @param int $limit
      * @return mixed
      */
-	public function findAll(array $binds=[], $where='',array $feild=[],$group='',$having='',$order='',$limit=100)
+	public function findAll(array $binds=[], $where='',$limit=100,array $feild=[],$group='',$having='',$order='')
 	{
 		$feildstr='*';
 		if(!empty($feild)) {
@@ -304,9 +303,10 @@ abstract class BaseDao{
 		if(!empty($order)) {
 			$sql.="order by $order ";
 		}
-		if($limit!=0) {
+		if($limit!=0 || is_string($limit)) {
 			$sql.="limit $limit";
 		}
+		//dump($sql);
 		return $this->_pdo->getRows($sql, $binds);
 	}
 

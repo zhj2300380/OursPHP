@@ -13,7 +13,7 @@ class ConfigManage
 {
     private static $_configList;
 
-    private static $_configType=['mysql','mongodb','memcached','redis','decorator','route','upload'];
+    private static $_configType=['mysql','mongodb','memcached','redis','decorator','route','upload','pagination'];
 
     /**
      * @param $type 'mysql','mongodb','memcached','redis'

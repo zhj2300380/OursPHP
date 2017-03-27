@@ -22,30 +22,13 @@ class CaptchaManage
     private $_expire=300;//有效期
 
 
-    private static $_captchamanage;
-
-    /**
-     * 单列
-     * @param int $expire 有效期（秒）
-     * @param int $codelen 验证码长度
-     * @param int $width 宽度
-     * @param int $height 高度
-     * @param int $fontsize 指定字体大小
-     * @return CaptchaManage
-     */
-    public static function  getInstance($expire=300,$codelen=6,$width=130,$height=50,$fontsize=20) {
-        if (empty(self::$_captchamanage)) {
-            self::$_captchamanage = new self($expire,$codelen,$width,$height,$fontsize);
-        }
-        return self::$_captchamanage;
-    }
-
     /**
      * CaptchaManage constructor.
-     * @param int $codelen 验证码长度
+     * @param int $expire 过期时间
+     * @param int $codelen 字符个数
      * @param int $width 宽度
      * @param int $height 高度
-     * @param int $fontsize 指定字体大小
+     * @param int $fontsize 字体大小
      */
     public function __construct($expire=300,$codelen=6,$width=130,$height=50,$fontsize=20) {
 
@@ -68,22 +51,33 @@ class CaptchaManage
         }
         $this->_font = OURS_LIB_PATH.'/Captcha/font/Elephant.ttf';//注意字体路径要写对，否则显示不了图片
     }
-    //生成随机码
+
+    /**
+     * 生成随机码
+     */
     private function createCode() {
         $_len = strlen($this->_charset)-1;
         for ($i=0;$i<$this->_codelen;$i++) {
             $this->_code .= $this->_charset[mt_rand(0,$_len)];
         }
         $cookieManage=new CookieManage('ck');
-        $cookieManage->set('cc',$this->getCode(),$this->_expire);
+        $ccarr['code']=$this->getCode();
+        $ccarr['time']=time();
+        $cookieManage->set('cc',$ccarr,$this->_expire);
     }
-    //生成背景
+
+    /**
+     * 生成背景
+     */
     private function createBg() {
         $this->_img = imagecreatetruecolor($this->_width, $this->_height);
         $color = imagecolorallocate($this->_img, mt_rand(157,255), mt_rand(157,255), mt_rand(157,255));
         imagefilledrectangle($this->_img,0,$this->_height,$this->_width,0,$color);
     }
-    //生成文字
+
+    /**
+     * 生成字体
+     */
     private function createFont() {
         $_x = $this->_width / $this->_codelen;
         for ($i=0;$i<$this->_codelen;$i++) {
@@ -91,7 +85,10 @@ class CaptchaManage
             imagettftext($this->_img,$this->_fontsize,mt_rand(-30,30),$_x*$i+mt_rand(1,5),$this->_height / 1.4,$this->_fontcolor,$this->_font,$this->_code[$i]);
         }
     }
-    //生成线条、雪花
+
+    /**
+     * 生成线条、雪花
+     */
     private function createLine() {
         //线条
         for ($i=0;$i<6;$i++) {
@@ -134,8 +131,9 @@ class CaptchaManage
     {
         $rel=false;
         $cookieManage=new CookieManage('ck');
-        $this->_code=$cookieManage->get('cc');
-        if($code===$this->_code)
+        $ccarr=$cookieManage->get('cc');
+        $this->_code=$ccarr['code'];
+        if(strtolower($code)===$this->getCode())
         {
             $rel=true;
         }
