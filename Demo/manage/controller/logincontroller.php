@@ -29,7 +29,8 @@ class LoginController  extends Controller
         if($this->isPost())
         {
             $vars=$request->post('vars');
-            $rel= CaptchaManage::getInstance()->doCheck($vars['code']);
+            $captchaManage=new CaptchaManage();
+            $rel= $captchaManage->doCheck($vars['code']);
             if($rel)
             {
                 $svc=new ManagerSvc();
@@ -51,7 +52,8 @@ class LoginController  extends Controller
     }
     public function Captcha($request,$response)
     {
-        CaptchaManage::getInstance(300,4,120,35)->doImg();
+        $captchaManage=new CaptchaManage(300,4,120,35);
+        $captchaManage->doImg();
     }
     public function loginOut($request,$response)
     {

@@ -9,6 +9,8 @@
 namespace  manage\controller;
 
 use OursPHP\Core\Mvc\Controller\Controller;
+use OursPHP\Core\Lib\Cookie\CookieManage;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class ApiController  extends Controller
 {
@@ -22,6 +24,20 @@ class ApiController  extends Controller
         $response->title="这是标题";
         $response->body="這個是API模式 以GET方式 请求{$this->_controller}控制器{$this->_action}方法";
         $this->renderSmarty('index');
+    }
+    public function GET_cookie($request,$response) {
+        $cookie=new CookieManage('cc',0);
+        dump($_COOKIE['cc_bb']);
+        $data=$cookie->get('bb');
+        dump($data);
+        if($data)
+        {
+            echo $data;
+        }else
+            {
+                $cookie->set('bb',time(),0);
+                echo '生成';
+            }
     }
     public function POST_index($request,$response) {
 

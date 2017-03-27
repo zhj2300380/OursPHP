@@ -26,7 +26,7 @@ class SystemSvc extends BaseService
             $query['status']=$status;
             $where="status=:status";
         }
-        return $dao->findAll($query,$where,[],'','','id asc',0);
+        return $dao->findAll($query,$where,0,[],'','','id asc');
     }
     public function getManager($id)
     {
@@ -71,7 +71,7 @@ class SystemSvc extends BaseService
             $query['status']=$status;
             $where="status=:status";
         }
-        return $dao->findAll($query,$where,[],'','','id asc',0);
+        return $dao->findAll($query,$where,0,[],'','','id asc');
     }
     public function getRole($id)
     {
@@ -119,7 +119,7 @@ class SystemSvc extends BaseService
         }
         $field=['id','name','pid','icon','type','uri','description','ismenu','status'];
 
-        return $dao->findAll($query,$where,$field,'','','id asc',0);
+        return $dao->findAll($query,$where,0,$field,'','','id asc');
     }
     public function getFunction($id)
     {

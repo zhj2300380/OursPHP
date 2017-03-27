@@ -9,7 +9,7 @@
 {{if !empty($menulist)}}
 {{foreach $menulist as $menu}}
 {{if $menu['ismenu']==1 && isset($rolelist[strtolower($menu['uri'])])}}
-<li class="">
+<li class="{{if $menu['uri']==$_controller}}open{{/if}}">
     <a href="#" class="dropdown-toggle">
         <i class="menu-icon {{$menu['icon']}}"></i>
         <span class="menu-text"> {{$menu['name']}} </span>

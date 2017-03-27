@@ -16,7 +16,7 @@ class ManagerSvc extends BaseService
 {
     public function userLoginOut()
     {
-        $cookieManage=new CookieManage('manager',1800);
+        $cookieManage=new CookieManage('manager',0);
         $cookieManage->clear('info');
     }
     /**
@@ -32,8 +32,8 @@ class ManagerSvc extends BaseService
         $user=$dao->findOne($query,$where);
         if($user && md5($password)===$user['password'])
         {
-            $cookieManage=new CookieManage('manager',1800);
-            $cookieManage->set('info',$user);
+            $cookieManage=new CookieManage('manager',0);
+            $cookieManage->set('info',$user,0);
             return $user;
         }
         return false;
