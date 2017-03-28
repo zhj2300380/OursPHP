@@ -26,6 +26,14 @@ class Redis {
             $_redis = new \Redis();
             list($host, $port,$passwd,$dbindex)=ConfigManage::getConfig('redis',$nodeName);
             $_redis->pconnect($host,$port);
+            if(!empty($passwd))
+            {
+                $_redis->auth($passwd);
+            }
+            if(is_numeric($dbindex) && $dbindex>0)
+            {
+                $_redis->select($dbindex);
+            }
             self::$_cachelist[$nodeName]=$_redis;
         }
         return self::$_cachelist[$nodeName];
