@@ -29,10 +29,10 @@ defined('ROOT_PATH') or define('ROOT_PATH', dirname($_SERVER['SCRIPT_FILENAME'])
 defined('WEB_PATH') or define('WEB_PATH', dirname(realpath(ROOT_PATH)) . OURS_DS);//当前站点所在的目录
 defined('WEB_NAMESPACE') or define('WEB_NAMESPACE', basename (WEB_PATH) );
 defined('WEB_TMP_PATH') or define('WEB_TMP_PATH', WEB_PATH.'tmp' . OURS_DS);//当前站点模版缓存目录
-defined('PROGECT_PATH') or define('PROGECT_PATH', dirname(realpath(WEB_PATH)) . OURS_DS);//当前项目所在目录
-defined('PROGECT_CONFIG_PATH') or define('PROGECT_CONFIG_PATH', PROGECT_PATH.'Config' . OURS_DS);//当前项目配置文件所在目录
-defined('PROGECT_APP_PATH') or define('PROGECT_APP_PATH',PROGECT_PATH . 'App'. OURS_DS);//项目公共资源目录存放项目内的公共code
-defined('VENDOR_PATH') or define('VENDOR_PATH', PROGECT_PATH . 'vendor' . OURS_DS);//composer下载的扩展存在目录
+defined('PROJECT_PATH') or define('PROJECT_PATH', dirname(realpath(WEB_PATH)) . OURS_DS);//当前项目所在目录
+defined('PROJECT_CONFIG_PATH') or define('PROJECT_CONFIG_PATH', PROJECT_PATH.'Config' . OURS_DS);//当前项目配置文件所在目录
+defined('PROJECT_APP_PATH') or define('PROJECT_APP_PATH',PROJECT_PATH . 'App'. OURS_DS);//项目公共资源目录存放项目内的公共code
+defined('VENDOR_PATH') or define('VENDOR_PATH', PROJECT_PATH . 'vendor' . OURS_DS);//composer下载的扩展存在目录
 /*
  * 加载composer包
  */
@@ -57,8 +57,8 @@ function ours_autoload( $class ) {
  * 项目公共部分自动加载
  * @param $class
  */
-function progect_app_autoload( $class ) {
-    $file = str_replace('\\','/',PROGECT_PATH.$class . '.php');
+function project_app_autoload( $class ) {
+    $file = str_replace('\\','/',PROJECT_PATH.$class . '.php');
     if (OURS_DEBUG) {
         echo '<!-- '.$class.'include '.$file.'-->'."\r\n";
     }
@@ -68,9 +68,9 @@ function progect_app_autoload( $class ) {
 }
 
 
-function progect_site_autoload( $class )
+function project_site_autoload( $class )
 {
-    $file = str_replace('\\','/',PROGECT_PATH.strtolower($class) . '.php');
+    $file = str_replace('\\','/',PROJECT_PATH.strtolower($class) . '.php');
     if (OURS_DEBUG) {
         echo '<!-- '.$class.'include '.$file.'-->'."\r\n";
     }
@@ -83,8 +83,8 @@ function progect_site_autoload( $class )
  * 加载注册
  */
 spl_autoload_register('ours_autoload');
-spl_autoload_register('progect_app_autoload');
-spl_autoload_register('progect_site_autoload');
+spl_autoload_register('project_app_autoload');
+spl_autoload_register('project_site_autoload');
 
 /**
  * 配置加载

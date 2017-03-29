@@ -37,7 +37,7 @@ class ConfigManage
     {
         foreach (self::$_configType as $item)
         {
-            $filepath=PROGECT_CONFIG_PATH."$item.php";
+            $filepath=PROJECT_CONFIG_PATH."$item.php";
             if (file_exists($filepath))
             {
                 self::$_configList[$item]=include($filepath);

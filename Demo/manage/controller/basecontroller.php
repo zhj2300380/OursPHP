@@ -45,8 +45,8 @@ class BaseController extends Controller
         {
             $response->title="权限验证";
             $response->stitle="未授权";
-            //$this->layoutSmarty('../layout/nopower');
-           // exit;
+            $this->layoutSmarty('../layout/nopower');
+            exit;
         }
     }
 }
