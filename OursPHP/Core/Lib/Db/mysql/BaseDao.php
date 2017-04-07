@@ -126,12 +126,12 @@ abstract class BaseDao{
 		return $this->_pdo->getRows($sql, array($value));
 	}
 	
-	public function exec($sql){
-		return $this->_pdo->exec($sql);
+	public function exec($sql,array $binds){
+		return $this->_pdo->getScaler($sql,$binds);
 	}
 	
-	public function query($query){
-		return $this->_pdo->query($query);
+	public function query($sql,array $binds){
+		return $this->_pdo->getRows($sql,$binds);
 	}
 	
 	/**

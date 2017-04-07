@@ -30,9 +30,9 @@ $options=array
 (
     'default'=>
         [
-            '10.0.90.10',
-            6379,
-            'redispasswd',
+            'redis.ha.jskm.net.cn',
+            63790,
+            'redis!@#$',
             1
         ],
     'web1'=>

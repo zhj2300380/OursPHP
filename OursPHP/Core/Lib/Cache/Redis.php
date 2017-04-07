@@ -8,6 +8,7 @@
  */
 namespace OursPHP\Core\Lib\Cache;
 use OursPHP\Init\ConfigManage;
+use OursPHP\Core\Common\BizException;
 
 class Redis {
 
@@ -24,7 +25,12 @@ class Redis {
         if(!isset(self::$_cachelist[$nodeName]))
         {
             $_redis = new \Redis();
-            list($host, $port,$passwd,$dbindex)=ConfigManage::getConfig('redis',$nodeName);
+            $options=ConfigManage::getConfig('redis',$nodeName);
+            if($options==false)
+            {
+                throw new BizException("redis缓存相关节点未配置：".$nodeName);
+            }
+            list($host, $port,$passwd,$dbindex)=$options;
             $_redis->pconnect($host,$port);
             if(!empty($passwd))
             {
@@ -47,12 +53,20 @@ class Redis {
      * @param array $func_params
      * @return mixed
      */
-    public static function accessCache($key, $time, $get_data_func, $func_params=array()) {
-        self::getInstance();
-        $data = self::$_redis->get($key);
+    public static function accessCache($key, $time, $get_data_func, $func_params=array(),$nodeName='default') {
+        $_redis=self::getInstance($nodeName);
+        $data = $_redis->get($key);
         if (empty($data) || isset($_GET['_refresh'])) {
             $data = call_user_func_array($get_data_func, $func_params);
-            self::$_redis->set($key, $data, $time);
+
+            if(is_object($data)||is_array($data)){
+                $data = serialize($data);
+            }
+            $_redis->set($key, $data, $time);
+        }
+        $data_serl = @unserialize($data);
+        if(is_object($data_serl)||is_array($data_serl)){
+            $data= $data_serl;
         }
         return $data;
     }
@@ -65,29 +79,35 @@ class Redis {
      * @param array $func_params
      * @return mixed
      */
-    public static function accessCacheWithLock($key, $time, $get_data_func, $func_params=array()) {
-        self::getInstance();
-        $data = self::$_redis->get($key);
+    public static function accessCacheWithLock($key, $time, $get_data_func, $func_params=array(),$nodeName='default') {
+        $_redis=self::getInstance($nodeName);
+        $data = $_redis->get($key);
 
-        if ($data && empty($_GET['_refresh']))
-            return $data;
-        else
-            self::$_redis->delete($key);
+        if (empty($data) || isset($_GET['_refresh'])) {
+            if($_redis->setnx($key, null)) {
+                $data = call_user_func_array($get_data_func, $func_params);
 
-        //防止并发取缓存
-        if(self::$_redis->setnx($key, null)) {
-            $data = call_user_func_array($get_data_func, $func_params);
-            if (!empty($data))
-                self::$_redis->set($key, $data, $time);
+                if (!empty($data))
+                {
+                    if(is_object($data)||is_array($data)){
+                        $data = serialize($data);
+                    }
+                    $_redis->set($key, $data, $time);
+                }
 
-        } else {
-            for($i=0; $i<10; $i++) { //5秒没有反应，就出白页吧，系统貌似已经不行了
-                sleep(0.5);
-                $data = self::$_redis->get($key);
-                if ($data !== false)
-                    break;
+            } else {
+                for($i=0; $i<10; $i++) { //5秒没有反应，就出白页吧，系统貌似已经不行了
+                    sleep(0.5);
+                    $data = $_redis->get($key);
+                    if ($data !== false)
+                        break;
 
+                }
             }
+        }
+        $data_serl = @unserialize($data);
+        if(is_object($data_serl)||is_array($data_serl)){
+            $data= $data_serl;
         }
         return $data;
     }

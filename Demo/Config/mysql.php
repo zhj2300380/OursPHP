@@ -27,11 +27,11 @@ $options=array
 				[
 						[
 							
-							'host'=>'10.0.90.10',
-							'port'=>'3306',
-							'database'=>'oursphp_db',
-							'username'=>'oursphp',
-							'password'=>'oursphp',
+							'host'=>'192.168.57.91',
+							'port'=>'3307',
+							'database'=>'i.yoka.com',
+							'username'=>'yoka',
+							'password'=>'yoka.com',
 							'charset'=>'utf-8',
 							'collation'=>'',
 							'prefix'=>'',

@@ -13,7 +13,7 @@ class ConfigManage
 {
     private static $_configList;
 
-    private static $_configType=['mysql','mongodb','memcached','redis','decorator','route','upload','pagination'];
+    private static $_configType=['mysql','mongodb','memcached','redis','decorator','route','upload','pagination','withcache'];
 
     /**
      * @param $type 'mysql','mongodb','memcached','redis'
@@ -29,7 +29,7 @@ class ConfigManage
         }
         if($nodeName && !key_exists($nodeName, self::$_configList[$type]))
         {
-            throw new BizException($nodeName.":数据节点不存在");
+            return false;
         }
         return ($nodeName)?self::$_configList[$type][$nodeName]:self::$_configList[$type];
     }
