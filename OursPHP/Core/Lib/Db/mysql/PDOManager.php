@@ -28,6 +28,11 @@ class PDOManager{
      */
 	public static function getNewConnect($sectionName) {
 		$cfg=ConfigManage::getConfig('mysql',$sectionName);
+
+        if($cfg===false)
+        {
+            echo 'mysql config error';exit;
+        }
 		/**
 		 * 单节点
 		 */
