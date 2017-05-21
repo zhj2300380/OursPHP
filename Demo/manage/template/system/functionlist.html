@@ -21,7 +21,7 @@
                 {{foreach $rootMenu as $root}}
                 <tr>
                     <td><i class="{{$root['icon']}}"></i>{{$root['name']}}{{if count($root['sub'])>0}}————<a data-toggle="collapse" data-parent="#function-table"
-                                                                                                             href="#function-{{$root['id']}}"><i class="glyphicon glyphicon-plus"></i></a>{{/if}}</th>
+                                                                                                             href="#function-{{$root['id']}}"><i class="glyphicon glyphicon-plus"></i></a>{{/if}}</td>
                     <td>
 
 
@@ -83,7 +83,7 @@
                             </thead>
                             {{foreach $root['sub'] as $child}}
                             <tr>
-                                <td><i class="glyphicon glyphicon-play-circle"></i>————{{$child['name']}}</th>
+                                <td><i class="glyphicon glyphicon-play-circle"></i>————{{$child['name']}}</td>
                                 <td>
 
                                     {{if $child['ismenu']==1}}
@@ -95,8 +95,8 @@
                                     {{/if}}
 
                                 </td>
-                                <td>/{{$root['uri']}}/{{$child['uri']}}</th>
-                                <td style="width: 200px;">父：{{$root['name']}}</th>
+                                <td>/{{$root['uri']}}/{{$child['uri']}}</td>
+                                <td style="width: 200px;">父：{{$root['name']}}</td>
                                 <td>{{if $child['status']==1}}
                                     <a class="blue" href="javascript:del('/{{$_controller}}/functionlock?id={{$child['id']}}')">
                                         <span title="点击锁定" class="badge badge-warning">正常</span></a>
@@ -148,10 +148,5 @@
 
 <script>
     jQuery(function($) {
-        $('.glyphicon.glyphicon-plus').each(function(){
-            $(this).on('click', function(){
-                $(this).toggleClass('glyphicon-minus');
-            });
-        });
     })
 </script>

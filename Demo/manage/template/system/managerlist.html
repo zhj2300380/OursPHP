@@ -22,7 +22,7 @@
                 <tbody>
                 {{foreach $rows as $row}}
                 <tr>
-                    <td>{{$row['username']}}</th>
+                    <td>{{$row['username']}}</td>
                     <td>
                         {{$row['nickname']}}
                     </td>
@@ -32,10 +32,10 @@
                         {{else}}
                         女
                         {{/if}}
-                    </th>
-                    <td>{{$row['mail']}}</th>
-                    <td>{{$row['telphone']}}</th>
-                    <td>{{$row['rolename']}}</th>
+                    </td>
+                    <td>{{$row['mail']}}</td>
+                    <td>{{$row['telphone']}}</td>
+                    <td>{{$row['rolename']}}</td>
                     <td>
                         {{if $row['status']==1}}
                         <a class="blue" href="javascript:del('/{{$_controller}}/managerlock?id={{$row['id']}}')">
@@ -77,10 +77,6 @@
 
 <script>
     jQuery(function($) {
-        $('.glyphicon.glyphicon-plus').each(function(){
-            $(this).on('click', function(){
-                $(this).toggleClass('glyphicon-minus');
-            });
-        });
+
     })
 </script>

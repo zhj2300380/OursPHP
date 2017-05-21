@@ -18,7 +18,7 @@
                 <tbody>
                 {{foreach $rows as $row}}
                 <tr>
-                    <td>{{$row['name']}}</th>
+                    <td>{{$row['name']}}</td>
                     <td>
                         {{$row['description']}}
                     </td>
@@ -63,10 +63,6 @@
 
 <script>
     jQuery(function($) {
-        $('.glyphicon.glyphicon-plus').each(function(){
-            $(this).on('click', function(){
-                $(this).toggleClass('glyphicon-minus');
-            });
-        });
+
     })
 </script>
