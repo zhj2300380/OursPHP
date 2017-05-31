@@ -31,9 +31,9 @@ trait WithCache
         if (substr($name, -11) == '_with_cache') {
 
             $relFunc = substr($name, 0, strlen($name)-11);
-            $key = md5($name.serialize($params));
+            $key = md5(get_class($this).$name.serialize($params));
+            //增加get_class($this).用来获取当前类的名称，修复缓存key重名的BUG
             $cache_time_params = isset($params[0])? $params[0]:null;
-
 
             if($options==false || $options['used']==false)
             {
