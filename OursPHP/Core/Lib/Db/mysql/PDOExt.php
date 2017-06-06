@@ -16,7 +16,7 @@ class PDOext extends PDO {
 	private $_userName = '';
 	private $_passowrd = '';
 	private $_charSet = '';
-	private $_debug = OURS_DEBUG;
+	private $_debug = false;
 	
 	public static $keys = array('key', 'type', 'condition', 'div', 'int1', 'int2', 'int3', 'int4', 'int8', 'status'); //mysql 常用关键字
 	
@@ -32,7 +32,7 @@ class PDOext extends PDO {
 		$this->_userName = $userName;
 		$this->_passowrd = $passowrd;
 		$this->_charSet = $charSet;
-
+        $this->_debug=(isset($_GET['debug']) && $_GET['debug']==1)?true:false;
 		$this->connect($dsn, $userName, $passowrd, $charSet);
 	}
 

@@ -14,9 +14,6 @@ use OursPHP\Init\ConfigManage;
 class WebManage{
     public static function  webStart(){
         $postfix=ConfigManage::getConfig('route',WEB_NAMESPACE);
-        if (OURS_DEBUG) {
-            echo '<!-- '.WEB_NAMESPACE.':'.$postfix.'-->'."\r\n";
-        }
         $mvc = new App($postfix);
         ob_start();
         try {

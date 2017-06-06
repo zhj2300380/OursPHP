@@ -59,7 +59,6 @@ class PDOManager{
 		} catch (PDOException $e) {
 			return false;
 		}
-		
 		return true;
 	}
 	

@@ -40,13 +40,15 @@ class SqlUtil {
 	
 			$item_list = array_unique($item_list);
 			$item_list_tmp = '';
-			foreach ($item_list AS $item)
-			{
-				if ($item !== '')
-				{
-					$item_list_tmp .= $item_list_tmp ? ",'$item'" : "'$item'";
-				}
-			}
+            foreach ($item_list AS $item)
+            {
+                if ($item !== '')
+                {
+                    $itemval=is_numeric($item)?$item:"'$item'";
+                    $_tmparr[]=$itemval;
+                }
+            }
+            $item_list_tmp=implode(',',$_tmparr);
 			if (empty($item_list_tmp))
 			{
 				return $field_name . " IN ('') ";

@@ -196,13 +196,13 @@ abstract class BaseDao{
         return $this->_pdo->updates($this->getTableName(),$this->getPKey(), $vars);
     }
 
-	/**
-	 * 根据条件更新
-	 * @param array $vars
-	 * @param string $where
-	 * e.g. 
-	 * 	editByWhere(array('name'=>'hi'), 'id=1') == sql: update xxx set name='hi' where id=1;
-	 */
+    /**
+     * 根据条件更新
+     * editByWhere(array('name'=>'hi'), 'id=1') == sql: update xxx set name='hi' where id=1;
+     * @param array $vars
+     * @param $where
+     * @return mixed
+     */
 	public function editByWhere(array $vars, $where) {
 		DataAssert::assertNotEmpty($where, new BizException('where条件为空'));
 		return $this->_pdo->update($this->getTableName(), $vars, $where);
@@ -217,24 +217,27 @@ abstract class BaseDao{
 		return $this->_pdo->replace($this->getTableName(), $vars);
 	
 	}
-	
-	/**
-	 * 按主键删除一条记录
-	 * @param unknown_type $pk_value 主键值
-	 */
+
+    /**
+     * 按主键删除一条记录
+     * @param $pk_value
+     * @return mixed
+     */
 	public function delete($pk_value) {
 		DataAssert::assertNotEmpty($pk_value, new BizException('主键为空'));
 		return $this->_pdo->delete($this->getTableName(), $this->getPkeyWhere($pk_value));
 	}
-	
-	/**
-	 * 按条件删除一条记录
-	 * @param unknown_type $where 条件
-	 */
+
+    /**
+     * 按条件删除
+     * @param $where
+     * @return mixed
+     */
 	public function deleteByWhere($where) {
 		DataAssert::assertNotEmpty($where, new BizException('where条件为空'));
 		return $this->_pdo->delete($this->getTableName(), $where);
 	}
+
 	protected function getPkeyWhereEx()
 	{
 		$pkname = $this->getPKey();

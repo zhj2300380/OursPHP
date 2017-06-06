@@ -39,9 +39,6 @@ class App {
         $response->_action = $this->_action;
 
         $controller = $this->_app_namespace ."\\controller\\". $this->_controller.'controller';
-        if (OURS_DEBUG) {
-            echo '<!-- '.$this->_app_namespace.'/'.$this->_controller.':'.$this->_action.'-->'."\r\n";
-        }
         if (!class_exists($controller)){
             throw new BizException("no controller called $controller ");
         }

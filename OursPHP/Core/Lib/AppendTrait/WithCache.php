@@ -29,8 +29,8 @@ trait WithCache
 
             $relFunc = substr($name, 0, strlen($name)-11);
             $key = md5(get_class($this).$name.serialize($params));
-            //增加get_class($this).用来获取当前类的名称，修复缓存key重名的BUG
             $cache_time_params = isset($params[0])? $params[0]:null;
+
 
             if($options==false || $options['used']==false)
             {
@@ -49,22 +49,19 @@ trait WithCache
                 $key = substr($cache_key_params, 10);
                 array_shift($params); //第一个参数是缓存时间不是函数用的，去除
             }
-            switch ($cache_type)
+            if('memcached'===$cache_type)
             {
-                case 'memcached':
-
-                    $data = Memcached::accessCache($key, $cache_time, array($this, $relFunc), $params,$cache_nodename);
-                    return $data;
-                    break;
-                case 'redis':
-                    $data = Redis::accessCache($key, $cache_time, array($this, $relFunc), $params,$cache_nodename);
-                    return $data;
-                    break;
-                default:
-                    $data =  call_user_func_array(array($this, $relFunc), $params);
-                    return $data;
-                    break;
+                $data = Memcached::accessCache($key, $cache_time, array($this, $relFunc), $params,$cache_nodename);
+                return $data;
+            }
+            if('redis'===$cache_type)
+            {
+                $data = Redis::accessCache($key, $cache_time, array($this, $relFunc), $params,$cache_nodename);
+                return $data;
             }
         }
+        $data =  call_user_func_array(array($this, $relFunc), $params);
+        return $data;
+
     }
 }

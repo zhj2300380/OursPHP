@@ -30,7 +30,7 @@ class CookieManage
      */
     public function __construct($prefix='', $expire=0){
 
-        if(is_string($prefix) && $prefix!=''){
+        if(is_string($prefix) && !empty($prefix)){
             $this->_prefix = $prefix;
         }
 
@@ -46,7 +46,7 @@ class CookieManage
      */
     public function setSecureKey($securekey)
     {
-        if(is_string($securekey) && empty($securekey)){
+        if(is_string($securekey) && !empty($securekey)){
             $this->_securekey = $securekey;
         }
         return $this;
@@ -71,7 +71,7 @@ class CookieManage
      */
     public function setDomain($domain)
     {
-        if(is_string($domain) && empty($domain)){
+        if(is_string($domain) && !empty($domain)){
             $this->_domain = $domain;
         }
         return $this;
@@ -83,7 +83,7 @@ class CookieManage
      */
     public function setPath($path)
     {
-        if(is_string($path) && empty($path)){
+        if(is_string($path) && !empty($path)){
             $this->_path = $path;
         }
         return $this;
@@ -95,7 +95,7 @@ class CookieManage
      */
     public function setPrefix($prefix)
     {
-        if(is_string($prefix) && empty($prefix)){
+        if(is_string($prefix) && !empty($prefix)){
             $this->_prefix = $prefix;
         }
         return $this;

@@ -46,9 +46,6 @@ if(file_exists(VENDOR_PATH.'autoload.php'))
  */
 function ours_autoload( $class ) {
     $file = str_replace('\\','/',OURS_AUTOLOAD_PATH.$class . '.php');
-    if (OURS_DEBUG) {
-        echo '<!-- include '.$class.'-->'."\r\n";
-    }
     if (is_file($file)) {
         require_once($file);
     }
@@ -59,9 +56,6 @@ function ours_autoload( $class ) {
  */
 function project_app_autoload( $class ) {
     $file = str_replace('\\','/',PROJECT_PATH.$class . '.php');
-    if (OURS_DEBUG) {
-        echo '<!-- '.$class.'include '.$file.'-->'."\r\n";
-    }
     if (is_file($file)) {
         require_once($file);
     }

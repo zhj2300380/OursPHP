@@ -57,7 +57,6 @@ class Memcached {
         $_memcached=self::getInstance($nodeName);
         $data = $_memcached->get($key);
 
-
         if (empty($data) || isset($_GET['_refresh'])) {
             if($_memcached->add($key, null)) {
                 $data = call_user_func_array($get_data_func, $func_params);
