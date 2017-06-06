@@ -25,9 +25,6 @@ trait WithCache
     public function __call($name, $params)
     {
         $options=ConfigManage::getConfig('withcache',WEB_NAMESPACE);
-        if (OURS_DEBUG) {
-            echo '<!-- withcache: '.json_encode($options).'-->'."\r\n";
-        }
         if (substr($name, -11) == '_with_cache') {
 
             $relFunc = substr($name, 0, strlen($name)-11);
@@ -37,7 +34,6 @@ trait WithCache
 
             if($options==false || $options['used']==false)
             {
-                echo '<!-- withcache: nocache-->'."\r\n";
                 return call_user_func_array(array($this, $relFunc), $params);
             }
 
@@ -52,11 +48,6 @@ trait WithCache
             if (is_string($cache_key_params) && substr($cache_key_params, 0, 10) == 'cache_key=') {
                 $key = substr($cache_key_params, 10);
                 array_shift($params); //第一个参数是缓存时间不是函数用的，去除
-            }
-            if (OURS_DEBUG) {
-                echo '<!-- $cache_nodename: '.$cache_nodename.'-->'."\r\n";
-                echo '<!-- $cache_key: '.$key.'-->'."\r\n";
-                echo '<!-- $cache_time: '.$cache_time.'-->'."\r\n";
             }
             switch ($cache_type)
             {

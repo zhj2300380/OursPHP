@@ -240,7 +240,61 @@ class PDOext extends PDO {
 		$sth->closeCursor();
 		return $out;
 	}
-	
+
+
+    /**
+     * 批量更新
+     * @param $table
+     * @param $pkey
+     * @param array $data
+     * @return array
+     */
+    public function updates($table,$pkey,array $data)
+    {
+        $sql="UPDATE {$table} SET ";
+        $columns=array_keys($data[0]);//获取需要修改的列
+        $keyindex = array_search($pkey,$columns);
+        unset($columns[$keyindex]);//主键列不需要更新
+        $columncount=count($columns);//获得需要处理的列数量用于循环
+
+        $_casesql='';
+        if($columncount>0)
+        {
+            $index=0;//当前操作列索引用于处理
+            $casearray=[];
+            foreach ($columns as $column)
+            {
+                $_subcase=" {$column} = CASE {$pkey} ";
+                $index=0;
+                $pkeyarray=[];
+                foreach ($data as $row)
+                {
+                    if(!in_array($row[$pkey],$pkeyarray))
+                    {
+                        $pkeyarray[]=$row[$pkey];
+                    }
+                    $_bindpkey=$pkey.$index;
+                    $_bindcolumn=$column.$index;
+                    $_subcase.="WHEN :{$_bindpkey} THEN :{$_bindcolumn} ";
+                    $binds[$_bindpkey]=$row[$pkey];
+                    $binds[$_bindcolumn]=$row[$column];
+                    $index++;
+                }
+                $_subcase.=' END';
+                $casearray[]=$_subcase;
+            }
+            $_casesql=implode(',',$casearray);
+        }
+
+        $wheresql=" where ".SQLUtil::db_create_in($pkeyarray,$pkey);
+        $sql.=$_casesql;
+        $sql.=$wheresql;
+        $sth = $this->prepare($sql);
+        self::bindValue($sth, $binds);
+        $out = $this->execute($sth);
+        $sth->closeCursor();
+        return $out;
+    }
 	/**
 	 * 按条件更新数据
 	 * @param string $table

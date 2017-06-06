@@ -184,7 +184,18 @@ abstract class BaseDao{
 		return $this->_pdo->update($this->getTableName(), $vars, $this->getPkeyWhere($pk_value));
 		
 	}
-	
+
+    /**
+     * 批量更新，主键作为case条件 执行原理case
+     * @param array $vars
+     * @return mixed
+     */
+    public function editsByPkey(array $vars)
+    {
+        DataAssert::assertNotEmpty($vars, new BizException('数据不能为空'));
+        return $this->_pdo->updates($this->getTableName(),$this->getPKey(), $vars);
+    }
+
 	/**
 	 * 根据条件更新
 	 * @param array $vars
