@@ -65,7 +65,7 @@ class PageLinkManage
         $this->_tpl_next=str_replace('{anchor}', $this->_anchor, $this->_tpl_next);
         $this->_tpl_item=str_replace('{anchor}', $this->_anchor, $this->_tpl_item);
 
-        $url = (strpos($url, '?')>0)? $url.'&':$url.'?';
+        $url = (strpos($url, '?')>=0)? $url.'&':$url.'?';
         $pages = ceil($total/$pageSize);
         if ($pid<1)
             $pid = 1;
