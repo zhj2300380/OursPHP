@@ -18,7 +18,7 @@ class CookieManage
     private $_prefix = '';                         // cookie prefix
     private $_securekey = OURS_SECUREKEY;          // encrypt key
     private $_expire = 0;
-    private $_path='';
+    private $_path='/';
     private $_domain='';
     private $_secure=false;
 
