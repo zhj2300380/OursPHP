@@ -10,6 +10,7 @@ namespace  manage\controller;
 
 use OursPHP\Core\Mvc\Controller\Controller;
 use OursPHP\Core\Lib\Cookie\CookieManage;
+use OursPHP\Core\Lib\Pagination\PageLinkManage;
 use App\Service\SystemSvc;
 
 class BaseController extends Controller
@@ -48,5 +49,10 @@ class BaseController extends Controller
             $this->layoutSmarty('../layout/nopower');
             exit;
         }
+        $this->pageLink = PageLinkManage::getInstance();
+    }
+    protected static function getOffset($pid, $pageSize) {
+        $offset = $pageSize*($pid-1);
+        return $offset<0?'0,'.$pageSize:$offset.','.$pageSize;
     }
 }

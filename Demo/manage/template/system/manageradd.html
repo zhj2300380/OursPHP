@@ -72,7 +72,6 @@
                     <select class="col-sm-3 select"  name="vars[roleid]">
 
                         {{foreach $roles as $role}}
-                        {{var_dump($user['roleid'],$role['id'])}}
                         <option value="{{$role['id']}}" {{if $user['roleid']==$role['id']}}selected{{/if}}>{{$role['name']}}</option>
                         {{/foreach}}
                     </select>
